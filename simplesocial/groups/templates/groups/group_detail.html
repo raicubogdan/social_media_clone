@@ -1,0 +1,44 @@
+{% extends 'groups/group_base.html' %}
+
+{% block pregroup %}
+
+<!-- 'group' refers to the 'Group' model (made possible by class based views) -->
+<!-- model objects can be easily accesed this way -->
+<h1>{{group.name}}</h1>
+
+<h2>Member Count: {{group.members.count}}</h2> <!-- Number of members -->
+
+<div class="content">
+
+    {%if user in group.members.all%} <!-- if the user is in the group-->
+
+    <a href="{% url 'groups:leave' slug=group.slug %}" 
+    class="btn btn-lg btn-fill btn-warning"><span
+    class="glyphicon glyphicon-remove-circle"></span>Leave</a> <!-- he can leave-->
+
+    {% else %} <!-- if the user is not a member of the group-->
+    
+    <a href="{% url 'groups:join' slug=group.slug %}" 
+    class="btn btn-lg btn-fill btn-warning"><span
+    class="glyphicon glyphicon-ok-circle"></span>Join</a> <!-- he can join-->
+
+    {% endif %}
+
+</div>
+{% endblock %}
+
+
+{% block group_content %}
+    <div class="col-md-8">
+        {% if group.posts.count == 0 %} <!-- if there are no posts in the group-->
+            <h2>No posts in this group yet</h2>
+        {% else %} <!-- if there are posts in the group -->
+            {% for post in group.posts.all %}
+                {% include "posts/_post.html" %} <!-- 'include' injects html content -->
+            {% endfor %}
+        {% endif %}
+            
+    </div>
+
+{% endblock  %}
+    
